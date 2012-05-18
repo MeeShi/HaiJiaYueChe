@@ -16,7 +16,7 @@
 ###安装(谷歌浏览器版) 目前支持 Google浏览器和所有chromium核心的浏览器
 
 
-使用谷歌浏览器 [点击这里](https://github.com/MeeShi/HaiJiaYueChe/raw/master/haijia.yueche.retrive.js), 然后确认安装此Script
+使用谷歌浏览器 [点击这里](https://github.com/MeeShi/HaiJiaYueChe/raw/master/haijiayueche.user.js), 然后确认安装此Script
 
 
 ###自动刷车
