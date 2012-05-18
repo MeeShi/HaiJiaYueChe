@@ -1,40 +1,36 @@
 /*
-		HaiDianJiaXiao Auto Retrive => A javascript snippet to help you book online.
-		Copyright (C) 2012-2015 meeshi
-		
-		Includes jQuery
-		Copyright 2011, John Resig
-		Dual licensed under the MIT or GPL Version 2 licenses.
-		http://jquery.org/license
+ *  HaiDianJiaXiao Auto Retrive => A javascript snippet to help you book online
+ *  Copyright (C) 2012-2015 meeshi
+ * 
+ *  Includes jQuery
+ *  Copyright 2011, John Resig
+ *  Dual licensed under the MIT or GPL Version 2 licenses.
+ *  http://jquery.org/license
+ * 
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ * 
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
 
-		Includes Sizzle.js
-		http://sizzlejs.com/
-		Copyright 2011, The Dojo Foundation
-		Released under the MIT, BSD, and GPL Licenses.
-		
-		This program is free software: you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
-		the Free Software Foundation, either version 3 of the License, or
-		(at your option) any later version.
-
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
-
-		You should have received a copy of the GNU General Public License
-		along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
-// ==UserScript==
-// @name 	   HaiDianJiaXiao Auto Retrive
-// @namespace	http://www.tangfengyuan.com
-// @description	A javascript snippet to help you book car online.
-// @include		*://haijia.bjxueche.net*
-
-// ==/UserScript==
-
+// ==UserScript==  
+// @name         HaiDianJiaXiao Booking Assistant
+// @version		 1.0
+// @author       darkfox.ch@gmail.com
+// @namespace    http://www.tangfengyuan.com
+// @description  海淀驾校约车助手
+// @include     *://haijia.bjxueche.net*
+// @require	https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js
+// ==/UserScript== 
 
 function withjQuery(callback, safe) {
 	if (typeof (jQuery) == "undefined") {
@@ -74,47 +70,50 @@ withjQuery(
 					window.webkitNotifications.requestPermission();
 				}
 			});
-//通知窗口
-function notify(str, timeout, skipAlert) {
-		if( window.webkitNotifications && window.webkitNotifications.checkPermission() == 0 ) {
-			var notification = webkitNotifications.createNotification(
-				"http://www.bjhdjx.com/favicon.ico",  // icon url - can be relative
-				'约车',  // notification title
-				str
-			);
-			notification.show();
-			if ( timeout ) {
-				setTimeout(function() {
-					notification.cancel();
-				}, timeout);
-			}
-			return true;
-		} else {
-			if( !skipAlert ) {
-				alert( str );
-			}
-			return false;
-		}
-	}
-	var audio = null;
-	var onticketAvailable = function() {
-			if(window.Audio) {
-				if(!audio) {
-					audio = new Audio("http://www.w3school.com.cn/i/song.ogg");
-					audio.loop = true;
+			// 通知窗口
+			function notify(str, timeout, skipAlert) {
+				if (window.webkitNotifications && window.webkitNotifications.checkPermission() == 0) {
+					var notification = webkitNotifications.createNotification("http://www.bjhdjx.com/favicon.ico", // icon
+					// url
+					// -
+					// can
+					// be
+					// relative
+					'约车', // notification title
+					str);
+					notification.show();
+					if (timeout) {
+						setTimeout(function() {
+							notification.cancel();
+						}, timeout);
+					}
+					return true;
+				} else {
+					if (!skipAlert) {
+						alert(str);
+					}
+					return false;
 				}
-				audio.play();
-				notify("可以约车了！", null, true);
-			} else {
-				notify("可以约车了！");
 			}
-		}
+			var audio = null;
+			var onticketAvailable = function() {
+				if (window.Audio) {
+					if (!audio) {
+						audio = new Audio("http://www.w3school.com.cn/i/song.ogg");
+						audio.loop = true;
+					}
+					audio.play();
+					notify("可以约车了！", null, true);
+				} else {
+					notify("可以约车了！");
+				}
+			}
 			var trainType = $("#hideTrainType").val();
 			var url = "/Training/ForReservationTimeSectionList";
 			var queryurl = "http://haijia.bjxueche.net/Training/ListForReservationKm2";
 			function submitForm() {
 				var submitUrl = url;
-				$.ajax({		
+				$.ajax({
 					url : submitUrl,
 					data : {
 						trainType : trainType
@@ -123,28 +122,28 @@ function notify(str, timeout, skipAlert) {
 					cache : false,
 					// async: false,
 					success : function(data) {
-						var icnt=0;
+						var icnt = 0;
 						if (typeof (data.data) == undefined || typeof (data.data["DateList"]) == undefined) return;
 						var colCnt = data.data["DateList"].length;
 
 						for ( var i = 0; i < data.data["DateDtMode"].length; i++) {
 							mode = data.data["DateDtMode"][i].Mode;
-							
+
 							if (mode == 2) {
 								icnt++;
-								onticketAvailable(); 
+								onticketAvailable();
 							}
-							
+
 						}
-						if (icnt<1){
-								reLogin();
-						}						
+						if (icnt < 1) {
+							reLogin();
+						}
 					},
 
 					error : function(data) {
 						reLogin();
 					},
-				
+
 				});
 			}
 
